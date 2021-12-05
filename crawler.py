@@ -10,17 +10,26 @@ from bs4 import BeautifulSoup
 URL = 'https://ro.wikipedia.org/wiki/Lista_statelor_lumii'
 base_URL = 'https://ro.wikipedia.org/wiki'
 URLS = []
+file_ = ""
 #define where to store information 
 director = f"{os.path.dirname(__file__)}/Content"
+csv_file = f"{os.path.dirname(__file__)}/Content/data.csv"
 
 
 def deleteFiles():
     if os.path.exists(director):
         shutil.rmtree(director)
+    if os.path.exists(csv_file):
+        os.remove(csv_file)
 
 
-def makeDirectory():
+def makeFiles():
     os.mkdir(director)
+    header = ['Name', 'Capital', 'Population', 'Language']
+    with open(csv_file, 'w', encoding='UTF8') as f:
+        writer = csv.writer(f)
+        # write the header
+        writer.writerow(header)
 
 
 def crawler():
@@ -39,8 +48,8 @@ def crawler():
 
 
 def main():
-    # deleteFiles() 
-    # makeDirectory()
+    deleteFiles() 
+    makeFiles()
     crawler()
     
 
