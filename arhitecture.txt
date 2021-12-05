@@ -1,0 +1,6 @@
+collection : /countries 
+    - GET  -  view countries 
+    - POST -  create new resourse 
+resource : /countries/<identifier> 
+    - GET    -  view resource 
+    - DELETE -  delete resource 
