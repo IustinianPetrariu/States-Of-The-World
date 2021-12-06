@@ -32,6 +32,10 @@ def makeFiles():
         writer.writerow(header)
 
 
+def spider():
+    pass
+
+
 def crawler():
    page = requests.get(URL) 
    soup = BeautifulSoup(page.content, 'html.parser')
@@ -39,12 +43,20 @@ def crawler():
    table_elements = results.find("table") 
    trs = table_elements.find_all("tr") 
    for tr in trs[1:]:
+       row = []
        tds = tr.find_all("td")
        link = tds[0].find("a")
        # get the href of the countries to search for further information
        href = link.get('href')
-       URLS.append(href)
-       print(link.text)
+       # get the name of the country
+       row.append(link.text)
+       # get the capital of the country
+       capital = "None"
+       capital = tds[4].find("i")
+       if capital != None:
+           capital = tds[4].find("i").findNext('a')
+           print(capital.text)
+       row.append(capital)
 
 
 def main():
