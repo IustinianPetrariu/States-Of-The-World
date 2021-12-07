@@ -4,11 +4,12 @@ import shutil
 import requests
 import sys
 import csv 
+import re
 from bs4 import BeautifulSoup 
 
 # main URL -states of the world 
 URL = 'https://ro.wikipedia.org/wiki/Lista_statelor_lumii'
-base_URL = 'https://ro.wikipedia.org/wiki'
+base_URL = 'https://ro.wikipedia.org'
 URLS = []
 file_ = ""
 #define where to store information 
@@ -25,24 +26,40 @@ def deleteFiles():
 
 def makeFiles():
     os.mkdir(director)
-    header = ['Name', 'Capital', 'Population', 'Language']
+    header = ['Name', 'Capital', 'Surface', 'Neighbors','Time-zone']
     with open(csv_file, 'w', encoding='UTF8') as f:
-        writer = csv.writer(f)
+        writer = csv.writer(f,delimiter = '|')
         # write the header
         writer.writerow(header)
 
 
-def spider():
-    pass
-
-
+def go_spider_scrapping(row,href):
+    link_crawl = base_URL + href
+    # link_crawl = 'https://ro.wikipedia.org/wiki/Afganistan'
+    print(link_crawl)
+    page = requests.get(link_crawl)
+    soup = BeautifulSoup(page.content, 'html.parser')
+    # print(soup.text)
+    table = soup.find("table",{"class":"infocaseta"})
+    surface = table.find(lambda tag:tag.name=="th" and "Geografie" in tag.text).parent.find_next_sibling('tr').find_next_sibling('tr')
+    result = re.search("[+-]?([0-9]*[.|,])+[0-9]+",surface.td.text)
+    if result:
+        surface = result.group(0)
+        print(surface)
+    neighbors = table.find(lambda tag:tag.name=="th" and "Vecini" in tag.text).find_next_sibling('td')
+    for neighbor in neighbors.find_all('a'):
+        print(neighbor.text)
+    fus_orar = table.find(lambda tag:tag.name=="th" and "Fus orar" in tag.text).find_next_sibling('td').text
+    print(fus_orar)
+    
+    
 def crawler():
    page = requests.get(URL) 
    soup = BeautifulSoup(page.content, 'html.parser')
    results = soup.find(id ='mw-content-text')
    table_elements = results.find("table") 
    trs = table_elements.find_all("tr") 
-   for tr in trs[1:]:
+   for tr in trs[1:3]:
        row = []
        tds = tr.find_all("td")
        link = tds[0].find("a")
@@ -51,18 +68,20 @@ def crawler():
        # get the name of the country
        row.append(link.text)
        # get the capital of the country
-       capital = "None"
+       capital = "Unknown"
        capital = tds[4].find("i")
        if capital != None:
            capital = tds[4].find("i").findNext('a')
            print(capital.text)
        row.append(capital)
+       go_spider_scrapping(row,href)
 
 
 def main():
     deleteFiles() 
     makeFiles()
     crawler()
+    # go_spider_scrapping()
     
 
 if __name__ == "__main__":
