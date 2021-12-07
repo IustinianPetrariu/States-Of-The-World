@@ -27,10 +27,16 @@ def deleteFiles():
 def makeFiles():
     os.mkdir(director)
     header = ['Name', 'Capital', 'Surface', 'Neighbors','Time-zone']
-    with open(csv_file, 'w', encoding='UTF8') as f:
+    with open(csv_file, 'w', encoding='UTF8',newline='') as f:
         writer = csv.writer(f,delimiter = '|')
         # write the header
         writer.writerow(header)
+
+
+def write_in_csv(row):
+    with open(csv_file, 'a', encoding='UTF8',newline='') as f:
+        writer = csv.writer(f,delimiter = '|')
+        writer.writerow(row)
 
 
 def go_spider_scrapping(row,href):
@@ -45,12 +51,18 @@ def go_spider_scrapping(row,href):
     result = re.search("[+-]?([0-9]*[.|,])+[0-9]+",surface.td.text)
     if result:
         surface = result.group(0)
+        row.append(surface)
         print(surface)
     neighbors = table.find(lambda tag:tag.name=="th" and "Vecini" in tag.text).find_next_sibling('td')
+    store_neighbours = ""
     for neighbor in neighbors.find_all('a'):
+        store_neighbours += neighbor.text + " "
         print(neighbor.text)
+    row.append(store_neighbours)
     fus_orar = table.find(lambda tag:tag.name=="th" and "Fus orar" in tag.text).find_next_sibling('td').text
+    row.append(fus_orar)
     print(fus_orar)
+    write_in_csv(row)
     
     
 def crawler():
@@ -73,7 +85,7 @@ def crawler():
        if capital != None:
            capital = tds[4].find("i").findNext('a')
            print(capital.text)
-       row.append(capital)
+       row.append(capital.text)
        go_spider_scrapping(row,href)
 
 
