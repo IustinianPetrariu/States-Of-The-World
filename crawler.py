@@ -41,7 +41,7 @@ def write_in_csv(row):
 
 def go_spider_scrapping(row,href):
     link_crawl = base_URL + href
-    # link_crawl = 'https://ro.wikipedia.org/wiki/Afganistan'
+    # link_crawl = 'https://ro.wikipedia.org/wiki/Antigua_%C8%99i_Barbuda'
     print(link_crawl)
     page = requests.get(link_crawl)
     soup = BeautifulSoup(page.content, 'html.parser')
@@ -53,11 +53,13 @@ def go_spider_scrapping(row,href):
         surface = result.group(0)
         row.append(surface)
         print(surface)
-    neighbors = table.find(lambda tag:tag.name=="th" and "Vecini" in tag.text).find_next_sibling('td')
     store_neighbours = ""
-    for neighbor in neighbors.find_all('a'):
-        store_neighbours += neighbor.text + " "
-        print(neighbor.text)
+    neighbors = table.find(lambda tag:tag.name=="th" and "Vecini" in tag.text)
+    if neighbors:
+        neighbors = neighbors.find_next_sibling('td')
+        for neighbor in neighbors.find_all('a'):
+            store_neighbours += neighbor.text + " "
+            print(neighbor.text)
     row.append(store_neighbours)
     fus_orar = table.find(lambda tag:tag.name=="th" and "Fus orar" in tag.text).find_next_sibling('td').text
     row.append(fus_orar)
@@ -71,7 +73,7 @@ def crawler():
    results = soup.find(id ='mw-content-text')
    table_elements = results.find("table") 
    trs = table_elements.find_all("tr") 
-   for tr in trs[1:3]:
+   for tr in trs[1:]:
        row = []
        tds = tr.find_all("td")
        link = tds[0].find("a")
@@ -98,10 +100,6 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
 
 
 
