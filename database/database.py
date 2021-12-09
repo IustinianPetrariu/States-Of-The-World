@@ -1,5 +1,5 @@
 import psycopg2 
-from setup.configuration import config
+from database.setup.configuration import config
 
 def connect():
     """Connect to the PostgreSQL database server"""
@@ -23,7 +23,6 @@ def connect():
 
         #close the cursor
         cursor.close()
-
 
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)

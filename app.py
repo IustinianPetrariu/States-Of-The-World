@@ -6,8 +6,10 @@ app = Flask(__name__)
 def hello_world():
     return 'Hello, World!'
 
-# @app.get("/countries")
-# def get_countries():
-#     return jsonify(countries)
+@app.post("/database")
+def create_database():
+    pass
+    
+    
 
 

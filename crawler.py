@@ -39,16 +39,18 @@ def write_in_csv(row):
         writer.writerow(row)
 
 
-def go_spider_scrapping(row,href):
+def go_spider_scrapping(row, href):
+    # row = []
     link_crawl = base_URL + href
-    # link_crawl = 'https://ro.wikipedia.org/wiki/Antigua_%C8%99i_Barbuda'
+    # link_crawl = 'https://ro.wikipedia.org/wiki/Albania'
     print(link_crawl)
     page = requests.get(link_crawl)
     soup = BeautifulSoup(page.content, 'html.parser')
     # print(soup.text)
     table = soup.find("table",{"class":"infocaseta"})
     surface = table.find(lambda tag:tag.name=="th" and "Geografie" in tag.text).parent.find_next_sibling('tr').find_next_sibling('tr')
-    result = re.search("[+-]?([0-9]*[.|,])+[0-9]+",surface.td.text)
+    result = re.search("(([0-9]*[.|,| ])+[0-9]+)|[0-9]*",surface.td.text) 
+    print(surface.td.text)
     if result:
         surface = result.group(0)
         row.append(surface)
@@ -66,29 +68,32 @@ def go_spider_scrapping(row,href):
     print(fus_orar)
     write_in_csv(row)
     
-    
+     
 def crawler():
-   page = requests.get(URL) 
-   soup = BeautifulSoup(page.content, 'html.parser')
-   results = soup.find(id ='mw-content-text')
-   table_elements = results.find("table") 
-   trs = table_elements.find_all("tr") 
-   for tr in trs[1:]:
-       row = []
-       tds = tr.find_all("td")
-       link = tds[0].find("a")
-       # get the href of the countries to search for further information
-       href = link.get('href')
-       # get the name of the country
-       row.append(link.text)
-       # get the capital of the country
-       capital = "Unknown"
-       capital = tds[4].find("i")
-       if capital != None:
-           capital = tds[4].find("i").findNext('a')
-           print(capital.text)
-       row.append(capital.text)
-       go_spider_scrapping(row,href)
+  page = requests.get(URL)  
+  soup = BeautifulSoup(page.content, 'html.parser')
+  results = soup.find(id ='mw-content-text')
+  table_elements = results.find("table") 
+  trs = table_elements.find_all("tr") 
+  for tr in trs[1:10]:
+      row = []
+      tds = tr.find_all("td")
+      link = tds[0].find("b").a
+      # get the href of the countries to search for further information
+      href = link.get('href')
+      print(href)
+      # get the name of the country
+      row.append(link.text)
+      # get the capital of the country
+      capital = "Unknown"
+      capital = tds[4].find("i")
+      if capital != None:
+          capital = tds[4].find("i").findNext('a')
+          print(capital.text)
+          capital = capital.text
+
+      row.append(capital)
+      go_spider_scrapping(row,href)
 
 
 def main():
