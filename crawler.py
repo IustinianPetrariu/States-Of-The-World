@@ -38,23 +38,27 @@ def write_in_csv(row):
         writer = csv.writer(f,delimiter = '|')
         writer.writerow(row)
 
-
 def go_spider_scrapping(row, href):
     # row = []
     link_crawl = base_URL + href
     # link_crawl = 'https://ro.wikipedia.org/wiki/Albania'
     print(link_crawl)
+    r = re.compile("(([0-9]*[.|,| ])+[0-9]+)|[0-9]+")
     page = requests.get(link_crawl)
     soup = BeautifulSoup(page.content, 'html.parser')
-    # print(soup.text)
     table = soup.find("table",{"class":"infocaseta"})
+
+    # 3. surface 
+    surface = 'Unknown'
     surface = table.find(lambda tag:tag.name=="th" and "Geografie" in tag.text).parent.find_next_sibling('tr').find_next_sibling('tr')
-    result = re.search("(([0-9]*[.|,| ])+[0-9]+)|[0-9]*",surface.td.text) 
+    result = r.search(surface.td.text) 
     print(surface.td.text)
     if result:
         surface = result.group(0)
-        row.append(surface)
-        print(surface)
+    row.append(surface)
+    print(surface)
+
+    # 4. neighbours 
     store_neighbours = ""
     neighbors = table.find(lambda tag:tag.name=="th" and "Vecini" in tag.text)
     if neighbors:
@@ -63,28 +67,60 @@ def go_spider_scrapping(row, href):
             store_neighbours += neighbor.text + " "
             print(neighbor.text)
     row.append(store_neighbours)
+
+    # 5. time zone
+    fus_orar = 'Unknown'
     fus_orar = table.find(lambda tag:tag.name=="th" and "Fus orar" in tag.text).find_next_sibling('td').text
     row.append(fus_orar)
     print(fus_orar)
-    write_in_csv(row)
+
+    # 6. density 
+    densitate ='Unknown'
+    densitate = table.find(lambda tag:tag.name=="th" and "Densitate" in tag.text)
+    if densitate: 
+      densitate = densitate.find_next_sibling('td')
+      result = r.search(densitate.text) 
+      print(result.group(0))
+      densitate = result.group(0)
+    row.append(densitate)
     
-     
+    #first, we search for estimation
+    population = 'Unknown'
+    estimation = table.find_all(lambda tag:tag.name=="th" and "Estimare" in tag.text)
+    if estimation:
+      estimation = estimation[-1].find_next_sibling('td')
+      result = r.search(estimation.text)
+      print(estimation.text)
+      population = result.group(0) 
+    else:
+      population_search = table.find(lambda tag:tag.name=="th" and "Recensământ" in tag.text)
+      if population_search:
+        population_search = population_search.find_next_sibling('td')
+        result = r.search(population_search.text)
+        if result:
+           population = result.group(0)
+    print(population)
+    row.append(population)
+
+
+    write_in_csv(row)
+
 def crawler():
   page = requests.get(URL)  
   soup = BeautifulSoup(page.content, 'html.parser')
   results = soup.find(id ='mw-content-text')
   table_elements = results.find("table") 
   trs = table_elements.find_all("tr") 
-  for tr in trs[1:10]:
+  for tr in trs[1:]:
       row = []
       tds = tr.find_all("td")
       link = tds[0].find("b").a
       # get the href of the countries to search for further information
       href = link.get('href')
       print(href)
-      # get the name of the country
+      # 1. get the name of the country
       row.append(link.text)
-      # get the capital of the country
+      # 2. get the capital of the country
       capital = "Unknown"
       capital = tds[4].find("i")
       if capital != None:
