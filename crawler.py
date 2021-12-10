@@ -38,6 +38,7 @@ def write_in_csv(row):
         writer = csv.writer(f,delimiter = '|')
         writer.writerow(row)
 
+
 def go_spider_scrapping(row, href):
     # row = []
     link_crawl = base_URL + href
@@ -83,7 +84,8 @@ def go_spider_scrapping(row, href):
       print(result.group(0))
       densitate = result.group(0)
     row.append(densitate)
-    
+
+    # 7. population
     #first, we search for estimation
     population = 'Unknown'
     estimation = table.find_all(lambda tag:tag.name=="th" and "Estimare" in tag.text)
@@ -102,8 +104,32 @@ def go_spider_scrapping(row, href):
     print(population)
     row.append(population)
 
+     #  8. Languages 
+    result_languages = 'Unknown'
+    language = table.find(lambda tag:tag.name=="th" and "Limbi oficiale" in tag.text)
+    if language:
+      language = language.find_next_sibling('td')
+      languages = language.find_all('a') 
+      if languages:
+        result_languages = languages[0].text
+        for lang in languages[1:]:
+         result_languages += ', ' + lang.text
+      else:
+        result_languages = language.text
+        
+    print(result_languages)
+    row.append(result_languages)
+
+    # 9. governance
+    result_governance = 'Unknown'
+    governance = table.find(lambda tag:tag.name=="th" and "Sistem politic" in tag.text)
+    if governance:
+      result_governance = governance.find_next_sibling('td').text
+    print(result_governance)
+    row.append(result_governance)
 
     write_in_csv(row)
+
 
 def crawler():
   page = requests.get(URL)  
