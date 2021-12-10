@@ -26,7 +26,7 @@ def deleteFiles():
 
 def makeFiles():
     os.mkdir(director)
-    header = ['Name', 'Capital', 'Surface', 'Neighbors','Time-zone']
+    header = ['Name', 'Capital', 'Surface', 'Neighbors','Time-zone','Density','Population','Languages','Governance']
     with open(csv_file, 'w', encoding='UTF8',newline='') as f:
         writer = csv.writer(f,delimiter = '|')
         # write the header
@@ -40,7 +40,7 @@ def write_in_csv(row):
 
 
 def go_spider_scrapping(row, href):
-    # row = []
+  
     link_crawl = base_URL + href
     # link_crawl = 'https://ro.wikipedia.org/wiki/Albania'
     print(link_crawl)
@@ -56,6 +56,7 @@ def go_spider_scrapping(row, href):
     print(surface.td.text)
     if result:
         surface = result.group(0)
+        surface = re.sub(r"(\.| )", ",", surface)
     row.append(surface)
     print(surface)
 
@@ -70,20 +71,21 @@ def go_spider_scrapping(row, href):
     row.append(store_neighbours)
 
     # 5. time zone
-    fus_orar = 'Unknown'
-    fus_orar = table.find(lambda tag:tag.name=="th" and "Fus orar" in tag.text).find_next_sibling('td').text
-    row.append(fus_orar)
-    print(fus_orar)
+    time_zone = 'Unknown'
+    time_zone = table.find(lambda tag:tag.name=="th" and "Fus orar" in tag.text).find_next_sibling('td').text
+    row.append(time_zone)
+    print(time_zone)
 
     # 6. density 
-    densitate ='Unknown'
-    densitate = table.find(lambda tag:tag.name=="th" and "Densitate" in tag.text)
-    if densitate: 
-      densitate = densitate.find_next_sibling('td')
-      result = r.search(densitate.text) 
+    result_density ='Unknown'
+    density = table.find(lambda tag:tag.name=="th" and "Densitate" in tag.text)
+    if density: 
+      density = density.find_next_sibling('td')
+      result = r.search(density.text) 
       print(result.group(0))
-      densitate = result.group(0)
-    row.append(densitate)
+      result_density = result.group(0)
+      result_density = re.sub(r"(\.| )", ",", result_density)
+    row.append(result_density)
 
     # 7. population
     #first, we search for estimation
@@ -101,6 +103,7 @@ def go_spider_scrapping(row, href):
         result = r.search(population_search.text)
         if result:
            population = result.group(0)
+           population = re.sub(r"(\.| )", ",", population)
     print(population)
     row.append(population)
 
@@ -147,14 +150,14 @@ def crawler():
       # 1. get the name of the country
       row.append(link.text)
       # 2. get the capital of the country
-      capital = "Unknown"
+      get_capital = "Unknown"
       capital = tds[4].find("i")
       if capital != None:
           capital = tds[4].find("i").findNext('a')
           print(capital.text)
-          capital = capital.text
+          get_capital = capital.text
 
-      row.append(capital)
+      row.append(get_capital)
       go_spider_scrapping(row,href)
 
 
