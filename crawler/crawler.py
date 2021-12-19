@@ -26,7 +26,7 @@ def deleteFiles():
 
 def makeFiles():
     os.mkdir(director)
-    header = ['Name', 'Capital', 'Surface', 'Neighbors','Time-zone','Density','Population','Languages','Governance']
+    header = ['name', 'capital', 'surface', 'neighbors','timezone','density','population','languages','governance']
     with open(csv_file, 'w', encoding='UTF8',newline='') as f:
         writer = csv.writer(f,delimiter = '|')
         # write the header
@@ -50,13 +50,13 @@ def go_spider_scrapping(row, href):
     table = soup.find("table",{"class":"infocaseta"})
 
     # 3. surface 
-    surface = 'Unknown'
+    surface = 0
     surface = table.find(lambda tag:tag.name=="th" and "Geografie" in tag.text).parent.find_next_sibling('tr').find_next_sibling('tr')
     result = r.search(surface.td.text) 
     print(surface.td.text)
     if result:
         surface = result.group(0)
-        surface = re.sub(r"(\.| )", ",", surface)
+        surface = re.sub(r"(,| |\.)", "", surface)
     row.append(surface)
     print(surface)
 
@@ -77,25 +77,26 @@ def go_spider_scrapping(row, href):
     print(time_zone)
 
     # 6. density 
-    result_density ='Unknown'
+    result_density = 0
     density = table.find(lambda tag:tag.name=="th" and "Densitate" in tag.text)
     if density: 
       density = density.find_next_sibling('td')
       result = r.search(density.text) 
       print(result.group(0))
       result_density = result.group(0)
-      result_density = re.sub(r"(\.| )", ",", result_density)
+      result_density = re.sub(r"(,| )", ".", result_density)
     row.append(result_density)
 
     # 7. population
     #first, we search for estimation
-    population = 'Unknown'
+    population = 0
     estimation = table.find_all(lambda tag:tag.name=="th" and "Estimare" in tag.text)
     if estimation:
       estimation = estimation[-1].find_next_sibling('td')
       result = r.search(estimation.text)
       print(estimation.text)
       population = result.group(0) 
+      population = re.sub(r"(,| |\.)", "", population)
     else:
       population_search = table.find(lambda tag:tag.name=="th" and "Recensământ" in tag.text)
       if population_search:
@@ -103,7 +104,7 @@ def go_spider_scrapping(row, href):
         result = r.search(population_search.text)
         if result:
            population = result.group(0)
-           population = re.sub(r"(\.| )", ",", population)
+           population = re.sub(r"(,| |\.)", "", population)
     print(population)
     row.append(population)
 

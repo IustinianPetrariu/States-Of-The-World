@@ -2,8 +2,7 @@ from configparser import ConfigParser
 import os.path
 
 
-
-def config(filename='database/setup/database.ini',section = 'postgresql'):
+def config(filename='setup/database.ini',section = 'postgresql'):
     #create a parser 
     parser = ConfigParser()
     #read configuration file 
