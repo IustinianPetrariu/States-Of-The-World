@@ -63,7 +63,6 @@ def insert_data(db, csv_file):
     except (Exception) as error:
         print(error)
 
-   
 
 def importToDatabase(csv_file):
     db = database.get_connection()

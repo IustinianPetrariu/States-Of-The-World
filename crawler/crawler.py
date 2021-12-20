@@ -15,7 +15,7 @@ file_ = ""
 #define where to store information 
 director = f"{os.path.dirname(__file__)}/Content"
 csv_file = f"{os.path.dirname(__file__)}/Content/data.csv"
-
+r = re.compile("(([0-9]+[\.|,| ])+[0-9]+)|[0-9]+")
 
 def deleteFiles():
     if os.path.exists(director):
@@ -53,28 +53,21 @@ def deal_with_big_numbers(content):
     else:
        return content
 
-def go_spider_scrapping(row, href):
-  
-    link_crawl = base_URL + href
-    # link_crawl = 'https://ro.wikipedia.org/wiki/Albania'
-    print(link_crawl)
-    r = re.compile("(([0-9]+[\.|,| ])+[0-9]+)|[0-9]+")
-    page = requests.get(link_crawl)
-    soup = BeautifulSoup(page.content, 'html.parser')
-    table = soup.find("table",{"class":"infocaseta"})
 
-    # 3. surface 
+def scrap_surface(table,row):
     surface = 0
     surface = table.find(lambda tag:tag.name=="th" and "Geografie" in tag.text).parent.find_next_sibling('tr').find_next_sibling('tr')
     result = r.search(surface.td.text) 
     print(surface.td.text)
     if result:
         surface = result.group(0)
+        surface = deal_with_big_numbers(surface)
         surface = re.sub(r"(,| |\.)", "", surface)
     row.append(surface)
-    print(surface)
+    return row
 
-    # 4. neighbours 
+
+def scrap_neighbours(table,row):
     store_neighbours = "Unknown"
     neighbors = table.find(lambda tag:tag.name=="th" and "Vecini" in tag.text)
     if neighbors:
@@ -84,14 +77,18 @@ def go_spider_scrapping(row, href):
             store_neighbours += neighbor.text + " "
             print(neighbor.text)
     row.append(sanitaze_data(store_neighbours))
+    return row
 
-    # 5. time zone
+
+def scrap_timezone(table,row):
     time_zone = 'Unknown'
     time_zone = table.find(lambda tag:tag.name=="th" and "Fus orar" in tag.text).find_next_sibling('td').text
     row.append(sanitaze_data(time_zone))
     print(time_zone)
+    return row
 
- # 6. density 
+
+def scrap_density(table,row):
     result_density = 0
     density = table.find(lambda tag:tag.name=="th" and "Densitate" in tag.text)
     if density: 
@@ -104,8 +101,10 @@ def go_spider_scrapping(row, href):
       result_density = deal_with_big_numbers(result_density)
       result_density = re.sub(r"(,| )", ".", result_density)
     row.append(result_density)
+    return row
 
-    # 7. population
+
+def scrap_population(table,row):
     #first, we search for estimation
     population = 0
     estimation = table.find_all(lambda tag:tag.name=="th" and "Estimare" in tag.text)
@@ -125,8 +124,10 @@ def go_spider_scrapping(row, href):
            population = re.sub(r"(,| |\.)", "", population)
     print(population)
     row.append(population)
+    return row
 
-     #  8. Languages 
+
+def scrap_languages(table,row):
     result_languages = 'Unknown'
     language = table.find(lambda tag:tag.name=="th" and "Limbi oficiale" in tag.text)
     if language:
@@ -138,17 +139,44 @@ def go_spider_scrapping(row, href):
          result_languages += ', ' + lang.text
       else:
         result_languages = language.text
-        
     print(result_languages)
     row.append(result_languages)
+    return row 
 
-    # 9. governance
+
+def scrap_governance(table,row):
     result_governance = 'Unknown'
     governance = table.find(lambda tag:tag.name=="th" and "Sistem politic" in tag.text)
     if governance:
       result_governance = governance.find_next_sibling('td').text
     print(result_governance)
     row.append(result_governance)
+    return row
+
+
+def go_spider_scrapping(row, href):
+  
+    link_crawl = base_URL + href
+    # link_crawl = 'https://ro.wikipedia.org/wiki/Albania'
+    print(link_crawl)
+    
+    page = requests.get(link_crawl)
+    soup = BeautifulSoup(page.content, 'html.parser')
+    table = soup.find("table",{"class":"infocaseta"})
+     # 3. surface 
+    row = scrap_surface(table,row) 
+    # 4. neighbours 
+    row = scrap_neighbours(table,row) 
+    # 5. time zone
+    row = scrap_timezone(table,row)
+    # 6. density 
+    row = scrap_density(table,row)
+    # 7. population
+    row = scrap_population(table,row) 
+    #  8. Languages 
+    row = scrap_languages(table,row)
+    # 9. governance
+    row = scrap_governance(table,row) 
 
     write_in_csv(row)
 
