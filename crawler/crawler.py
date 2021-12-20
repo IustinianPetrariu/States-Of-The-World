@@ -38,13 +38,27 @@ def write_in_csv(row):
         writer = csv.writer(f,delimiter = '|')
         writer.writerow(row)
 
+def sanitaze_data(content):
+  clean_content = content.strip()
+  clean_content = re.sub(r"\[.+?\]","",clean_content)
+  clean_content = re.sub (r"(,){1,}",", ",clean_content)
+  return clean_content
+
+def deal_with_big_numbers(content):
+    if  "." in content and "," in content :
+       print("here1")
+       content = re.sub(r"(\.| )","", content)
+       content = re.sub(r"(,)",".", content)
+       return content
+    else:
+       return content
 
 def go_spider_scrapping(row, href):
   
     link_crawl = base_URL + href
     # link_crawl = 'https://ro.wikipedia.org/wiki/Albania'
     print(link_crawl)
-    r = re.compile("(([0-9]*[.|,| ])+[0-9]+)|[0-9]+")
+    r = re.compile("(([0-9]+[\.|,| ])+[0-9]+)|[0-9]+")
     page = requests.get(link_crawl)
     soup = BeautifulSoup(page.content, 'html.parser')
     table = soup.find("table",{"class":"infocaseta"})
@@ -61,29 +75,33 @@ def go_spider_scrapping(row, href):
     print(surface)
 
     # 4. neighbours 
-    store_neighbours = ""
+    store_neighbours = "Unknown"
     neighbors = table.find(lambda tag:tag.name=="th" and "Vecini" in tag.text)
     if neighbors:
+        store_neighbours = ""
         neighbors = neighbors.find_next_sibling('td')
         for neighbor in neighbors.find_all('a'):
             store_neighbours += neighbor.text + " "
             print(neighbor.text)
-    row.append(store_neighbours)
+    row.append(sanitaze_data(store_neighbours))
 
     # 5. time zone
     time_zone = 'Unknown'
     time_zone = table.find(lambda tag:tag.name=="th" and "Fus orar" in tag.text).find_next_sibling('td').text
-    row.append(time_zone)
+    row.append(sanitaze_data(time_zone))
     print(time_zone)
 
-    # 6. density 
+ # 6. density 
     result_density = 0
     density = table.find(lambda tag:tag.name=="th" and "Densitate" in tag.text)
     if density: 
       density = density.find_next_sibling('td')
-      result = r.search(density.text) 
+      text = density.text 
+      text = re.sub(r"\(.+?\)","",text) 
+      result = r.search(text) 
       print(result.group(0))
       result_density = result.group(0)
+      result_density = deal_with_big_numbers(result_density)
       result_density = re.sub(r"(,| )", ".", result_density)
     row.append(result_density)
 
@@ -147,7 +165,7 @@ def crawler():
       link = tds[0].find("b").a
       # get the href of the countries to search for further information
       href = link.get('href')
-      print(href)
+      print('->>>',link.text)
       # 1. get the name of the country
       row.append(link.text)
       # 2. get the capital of the country

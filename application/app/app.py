@@ -10,9 +10,11 @@ def hello_world():
     return 'Hello, World!'
 
 
-@app.route("/top-10-countries-density",methods = ['GET'])
-def create_database():
-    
+@app.route("/top-10-countries/<value>",methods = ['GET'])
+def top_response(value):
+    # check if the user input is correct 
+    if not value in ['density', 'population','surface']:
+       return make_response(jsonify({"error":"Your input is not correct, information missing.."}), 400)
     response = []
     connection = None 
     try: 
@@ -23,7 +25,7 @@ def create_database():
         #create a cursor 
         cursor = connection.cursor()
         # execute a statement
-        query = 'SELECT ID,NAME,DENSITY FROM COUNTRIES ORDER BY DENSITY DESC limit 10;'
+        query = f'''SELECT ID,NAME,{value} FROM COUNTRIES ORDER BY {value} DESC limit 10; '''
         cursor.execute(query)
         rows = cursor.fetchall() 
         #close the cursor
@@ -36,9 +38,28 @@ def create_database():
             connection.close()
     # prepare the response for user 
     for row in rows:
-        dictionary = {'id' : int(row[0]), 'name':row[1], 'density:':float(row[2])} 
+        dictionary = {'id' : int(row[0]), 'name':row[1], value :float(row[2])} 
         response.append(dictionary)
     return make_response(jsonify(response),200)
     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
