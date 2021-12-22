@@ -1,10 +1,9 @@
 import database as database 
 import os
-
 import csv
 
-
 csv_file = '../../crawler/Content/data.csv'
+
 
 def checkFiles():
     if os.path.exists(csv_file):
@@ -44,7 +43,7 @@ def create_table(db):
     except (Exception) as error:
         print(error)
 
-#  (row[0],row[1],float(row[2]),row[3],row[4],float(row[5]),float(row[6]),row[7],row[8],row[9])
+
 def insert_data(db, csv_file):
     try:
         cursor = db.cursor()
@@ -79,7 +78,6 @@ def main():
    checkFiles()
    importToDatabase(csv_file)
    
-
 
 if __name__ == "__main__":
     main()

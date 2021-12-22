@@ -17,6 +17,7 @@ director = f"{os.path.dirname(__file__)}/Content"
 csv_file = f"{os.path.dirname(__file__)}/Content/data.csv"
 r = re.compile("(([0-9]+[\.|,| ])+[0-9]+)|[0-9]+")
 
+
 def deleteFiles():
     if os.path.exists(director):
         shutil.rmtree(director)
@@ -38,19 +39,24 @@ def write_in_csv(row):
         writer = csv.writer(f,delimiter = '|')
         writer.writerow(row)
 
+
 def sanitaze_data(content):
   clean_content = content.strip()
   clean_content = re.sub(r"\[.+?\]","",clean_content)
-  clean_content = re.sub (r"(,){1,}",", ",clean_content)
+  clean_content = re.sub(r" {2,}","",clean_content) 
+  clean_content = re.sub(r"(, )+",",",clean_content)
+  clean_content = re.sub(r",+$|, $","",clean_content)
+  # clean_content = re.sub(r"\[.*$","",clean_content)
+  # clean_content = re.sub(r", ,",",",clean_content)
+  # clean_content = re.sub(r",$|, $","",clean_content)
+  # clean_content = re.sub (r"(,){1,}",", ",clean_content)
   return clean_content
 
+
 def deal_with_big_numbers(content):
-    if  "." in content and "," in content :
-       print("here1")
+    
        content = re.sub(r"(\.| )","", content)
        content = re.sub(r"(,)",".", content)
-       return content
-    else:
        return content
 
 
@@ -61,8 +67,10 @@ def scrap_surface(table,row):
     print(surface.td.text)
     if result:
         surface = result.group(0)
-        surface = deal_with_big_numbers(surface)
-        surface = re.sub(r"(,| |\.)", "", surface)
+        if  "." in surface and "," in surface:
+            surface = deal_with_big_numbers(surface)
+        else :
+            surface = re.sub(r"(,| |\.)", "", surface)
     row.append(surface)
     return row
 
@@ -74,16 +82,24 @@ def scrap_neighbours(table,row):
         store_neighbours = ""
         neighbors = neighbors.find_next_sibling('td')
         for neighbor in neighbors.find_all('a'):
-            store_neighbours += neighbor.text + " "
+            store_neighbours += neighbor.text + ", "
             print(neighbor.text)
+    print(store_neighbours)
     row.append(sanitaze_data(store_neighbours))
     return row
+
+
+def sanitaze_timezone(content):
+    clean_content = re.sub(r"\[.*$","",content)
+    clean_content = re.sub(r" {2,}","",clean_content) 
+    return clean_content
 
 
 def scrap_timezone(table,row):
     time_zone = 'Unknown'
     time_zone = table.find(lambda tag:tag.name=="th" and "Fus orar" in tag.text).find_next_sibling('td').text
-    row.append(sanitaze_data(time_zone))
+    # row.append(sanitaze_data(time_zone))
+    row.append(sanitaze_timezone(time_zone))
     print(time_zone)
     return row
 
@@ -98,8 +114,10 @@ def scrap_density(table,row):
       result = r.search(text) 
       print(result.group(0))
       result_density = result.group(0)
-      result_density = deal_with_big_numbers(result_density)
-      result_density = re.sub(r"(,| )", ".", result_density)
+      if  "." in result_density and "," in result_density:
+            result_density = deal_with_big_numbers(result_density)
+      else: 
+            result_density = re.sub(r"(,| )", ".", result_density)
     row.append(result_density)
     return row
 
@@ -139,8 +157,10 @@ def scrap_languages(table,row):
          result_languages += ', ' + lang.text
       else:
         result_languages = language.text
-    print(result_languages)
-    row.append(result_languages)
+    # print("afisez limbile")
+    # print(result_languages)
+    print(sanitaze_data(str(result_languages)))
+    row.append(sanitaze_data(result_languages))
     return row 
 
 
@@ -150,7 +170,7 @@ def scrap_governance(table,row):
     if governance:
       result_governance = governance.find_next_sibling('td').text
     print(result_governance)
-    row.append(result_governance)
+    row.append(sanitaze_data(result_governance))
     return row
 
 
@@ -217,34 +237,6 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
