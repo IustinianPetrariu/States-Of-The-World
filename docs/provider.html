@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module provider</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>provider</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:e%3A%5Cfii%5Csemestrul%20v%5Cpython%5Cstates-of-the-world%5Capplication%5Cdatabase%5Cprovider.py">e:\fii\semestrul v\python\states-of-the-world\application\database\provider.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="csv.html">csv</a><br>
+</td><td width="25%" valign=top><a href="database.html">database</a><br>
+</td><td width="25%" valign=top><a href="os.html">os</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-check_files"><strong>check_files</strong></a>()</dt><dd><tt>verify&nbsp;if&nbsp;files&nbsp;where&nbsp;crawler&nbsp;store&nbsp;data&nbsp;exists.</tt></dd></dl>
+ <dl><dt><a name="-create_table"><strong>create_table</strong></a>(db)</dt><dd><tt>Used&nbsp;to&nbsp;drop&nbsp;existing&nbsp;tables&nbsp;and&nbsp;create&nbsp;new&nbsp;ones&nbsp;to&nbsp;store&nbsp;data.<br>
+&nbsp;<br>
+:param&nbsp;db:&nbsp;used&nbsp;for&nbsp;communication&nbsp;with&nbsp;database</tt></dd></dl>
+ <dl><dt><a name="-import_to_database"><strong>import_to_database</strong></a>(csv_file)</dt><dd><tt>Insert&nbsp;data&nbsp;collected&nbsp;by&nbsp;crawler&nbsp;in&nbsp;the&nbsp;database.<br>
+Clear&nbsp;all&nbsp;created&nbsp;tables&nbsp;and&nbsp;create&nbsp;new&nbsp;ones.<br>
+&nbsp;<br>
+:param&nbsp;csv_file:&nbsp;used&nbsp;to&nbsp;collect&nbsp;data&nbsp;from&nbsp;a<br>
+specif&nbsp;folder&nbsp;where&nbsp;crawler&nbsp;write&nbsp;data.</tt></dd></dl>
+ <dl><dt><a name="-insert_data"><strong>insert_data</strong></a>(db, csv_file)</dt><dd><tt>Read&nbsp;the&nbsp;file&nbsp;where&nbsp;data&nbsp;is&nbsp;stored&nbsp;and&nbsp;then&nbsp;write&nbsp;information&nbsp;in&nbsp;database.<br>
+&nbsp;<br>
+:param&nbsp;db&nbsp;:&nbsp;used&nbsp;to&nbsp;communicate&nbsp;with&nbsp;database<br>
+:param&nbsp;csv_file:&nbsp;where&nbsp;information&nbsp;collected&nbsp;by&nbsp;crawler&nbsp;is&nbsp;stored.</tt></dd></dl>
+ <dl><dt><a name="-main"><strong>main</strong></a>()</dt><dd><tt>Main&nbsp;function&nbsp;used&nbsp;to&nbsp;check&nbsp;for&nbsp;files&nbsp;and&nbsp;import&nbsp;data</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>csv_file</strong> = '../../crawler/Content/data.csv'</td></tr></table>
+</body></html>

@@ -3,7 +3,11 @@ from setup.configuration import config
 
 
 def connect():
-    """Connect to the PostgreSQL database server"""
+    """
+
+    Connect to the PostgreSQL database server
+
+    """
 
     connection = None
     try:
@@ -34,6 +38,11 @@ def connect():
 
 
 def get_connection():
+    """
+    Used to get a connection from database 
+
+    :return: connection obtain from database
+    """
     connection = None
     try:
         # read connection parameters from configuration file
@@ -52,11 +61,3 @@ def get_connection():
 
 if __name__ == '__main__':
     connect()
-
-
-
-
-
-
-
-

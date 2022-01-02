@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module crawler</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>crawler</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:e%3A%5Cfii%5Csemestrul%20v%5Cpython%5Cstates-of-the-world%5Ccrawler%5Ccrawler.py">e:\fii\semestrul v\python\states-of-the-world\crawler\crawler.py</a></font></td></tr></table>
+    <p><tt>#&nbsp;crawler&nbsp;for&nbsp;wikipedia&nbsp;-&nbsp;list&nbsp;of&nbsp;countries</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="csv.html">csv</a><br>
+<a href="os.html">os</a><br>
+</td><td width="25%" valign=top><a href="re.html">re</a><br>
+<a href="requests.html">requests</a><br>
+</td><td width="25%" valign=top><a href="shutil.html">shutil</a><br>
+<a href="sys.html">sys</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-crawler"><strong>crawler</strong></a>()</dt><dd><tt>main&nbsp;function&nbsp;for&nbsp;crawler&nbsp;to&nbsp;scrap&nbsp;data&nbsp;from&nbsp;website</tt></dd></dl>
+ <dl><dt><a name="-deal_with_big_numbers"><strong>deal_with_big_numbers</strong></a>(content)</dt><dd><tt>deal&nbsp;with&nbsp;different&nbsp;format&nbsp;for&nbsp;numbers<br>
+&nbsp;<br>
+:return:&nbsp;a&nbsp;correct&nbsp;number</tt></dd></dl>
+ <dl><dt><a name="-deleteFiles"><strong>deleteFiles</strong></a>()</dt><dd><tt>used&nbsp;to&nbsp;create&nbsp;the&nbsp;path&nbsp;where&nbsp;to&nbsp;store&nbsp;the&nbsp;information&nbsp;taken&nbsp;by&nbsp;crawler</tt></dd></dl>
+ <dl><dt><a name="-go_spider_scrapping"><strong>go_spider_scrapping</strong></a>(row, href)</dt><dd><tt>Function&nbsp;used&nbsp;for&nbsp;crawl&nbsp;a&nbsp;specific&nbsp;url&nbsp;and&nbsp;get&nbsp;data<br>
+&nbsp;<br>
+:param&nbsp;row:&nbsp;list&nbsp;with&nbsp;information&nbsp;already&nbsp;taken<br>
+:param&nbsp;href:&nbsp;link&nbsp;where&nbsp;to&nbsp;crawl&nbsp;to</tt></dd></dl>
+ <dl><dt><a name="-main"><strong>main</strong></a>()</dt><dd><tt>Main&nbsp;file&nbsp;to&nbsp;manage&nbsp;the&nbsp;crawler&nbsp;for&nbsp;delete&nbsp;and&nbsp;create&nbsp;new&nbsp;files</tt></dd></dl>
+ <dl><dt><a name="-makeFiles"><strong>makeFiles</strong></a>()</dt><dd><tt>Used&nbsp;to&nbsp;create&nbsp;the&nbsp;csv&nbsp;file&nbsp;and&nbsp;write&nbsp;the&nbsp;header</tt></dd></dl>
+ <dl><dt><a name="-sanitaze_data"><strong>sanitaze_data</strong></a>(content)</dt><dd><tt>Used&nbsp;for&nbsp;sanitaze&nbsp;content&nbsp;received<br>
+&nbsp;<br>
+:param&nbsp;content:&nbsp;string&nbsp;to&nbsp;be&nbsp;cleared<br>
+:return:&nbsp;clean&nbsp;data</tt></dd></dl>
+ <dl><dt><a name="-sanitaze_timezone"><strong>sanitaze_timezone</strong></a>(content)</dt><dd><tt>used&nbsp;for&nbsp;sanitaze&nbsp;timezone&nbsp;informations<br>
+&nbsp;<br>
+:param&nbsp;content:&nbsp;string&nbsp;to&nbsp;be&nbsp;cleared<br>
+:return:&nbsp;clean&nbsp;content</tt></dd></dl>
+ <dl><dt><a name="-scrap_density"><strong>scrap_density</strong></a>(table, row)</dt><dd><tt>used&nbsp;for&nbsp;scrapping&nbsp;density&nbsp;informations<br>
+&nbsp;<br>
+:param&nbsp;table:&nbsp;html&nbsp;table&nbsp;from&nbsp;website<br>
+:row:&nbsp;list&nbsp;with&nbsp;information&nbsp;already&nbsp;taken</tt></dd></dl>
+ <dl><dt><a name="-scrap_governance"><strong>scrap_governance</strong></a>(table, row)</dt><dd><tt>used&nbsp;for&nbsp;scrapping&nbsp;governance&nbsp;informations<br>
+&nbsp;<br>
+:param&nbsp;table:&nbsp;html&nbsp;table&nbsp;from&nbsp;website<br>
+:row:&nbsp;list&nbsp;with&nbsp;information&nbsp;already&nbsp;taken</tt></dd></dl>
+ <dl><dt><a name="-scrap_languages"><strong>scrap_languages</strong></a>(table, row)</dt><dd><tt>used&nbsp;for&nbsp;scrapping&nbsp;languages&nbsp;informations<br>
+&nbsp;<br>
+:param&nbsp;table:&nbsp;html&nbsp;table&nbsp;from&nbsp;website<br>
+:row:&nbsp;list&nbsp;with&nbsp;information&nbsp;already&nbsp;taken</tt></dd></dl>
+ <dl><dt><a name="-scrap_neighbours"><strong>scrap_neighbours</strong></a>(table, row)</dt><dd><tt>used&nbsp;for&nbsp;scrapping&nbsp;neighbours&nbsp;informations<br>
+&nbsp;<br>
+:param&nbsp;table:&nbsp;html&nbsp;table&nbsp;from&nbsp;website<br>
+:row:&nbsp;list&nbsp;with&nbsp;information&nbsp;already&nbsp;taken</tt></dd></dl>
+ <dl><dt><a name="-scrap_population"><strong>scrap_population</strong></a>(table, row)</dt><dd><tt>used&nbsp;for&nbsp;scrapping&nbsp;population&nbsp;informations<br>
+&nbsp;<br>
+:param&nbsp;table:&nbsp;html&nbsp;table&nbsp;from&nbsp;website<br>
+:row:&nbsp;list&nbsp;with&nbsp;information&nbsp;already&nbsp;taken</tt></dd></dl>
+ <dl><dt><a name="-scrap_surface"><strong>scrap_surface</strong></a>(table, row)</dt><dd><tt>used&nbsp;for&nbsp;scrapping&nbsp;surface&nbsp;informations<br>
+&nbsp;<br>
+:param&nbsp;table:&nbsp;html&nbsp;table&nbsp;from&nbsp;website<br>
+:row:&nbsp;list&nbsp;with&nbsp;information&nbsp;already&nbsp;taken</tt></dd></dl>
+ <dl><dt><a name="-scrap_timezone"><strong>scrap_timezone</strong></a>(table, row)</dt><dd><tt>used&nbsp;for&nbsp;scrapping&nbsp;timezone&nbsp;informations<br>
+&nbsp;<br>
+:param&nbsp;table:&nbsp;html&nbsp;table&nbsp;from&nbsp;website<br>
+:row:&nbsp;list&nbsp;with&nbsp;information&nbsp;already&nbsp;taken</tt></dd></dl>
+ <dl><dt><a name="-write_in_csv"><strong>write_in_csv</strong></a>(row)</dt><dd><tt>Used&nbsp;to&nbsp;write&nbsp;information&nbsp;scrapped&nbsp;in&nbsp;a&nbsp;csv&nbsp;file<br>
+&nbsp;<br>
+:param&nbsp;row:&nbsp;information&nbsp;to&nbsp;write&nbsp;in&nbsp;csv&nbsp;file</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>URL</strong> = 'https://ro.wikipedia.org/wiki/Lista_statelor_lumii'<br>
+<strong>URLS</strong> = []<br>
+<strong>base_URL</strong> = 'https://ro.wikipedia.org'<br>
+<strong>csv_file</strong> = r'E:\FII\Semestrul V\Python\States-Of-The-World\crawler/Content/data.csv'<br>
+<strong>director</strong> = r'E:\FII\Semestrul V\Python\States-Of-The-World\crawler/Content'<br>
+<strong>file_</strong> = ''<br>
+<strong>r</strong> = re.compile('(([0-9]+[\\.|,| ])+[0-9]+)|[0-9]+')</td></tr></table>
+</body></html>

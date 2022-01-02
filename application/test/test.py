@@ -3,6 +3,11 @@ from requests.exceptions import HTTPError
 
 
 def main():
+    """
+    Main function for testing API. Create a get response
+    to API with a specific request
+    :return: raw message received from API request
+    """
 
     try:
         response = requests.get('http://127.0.0.1:5000/top-10-countries/density')

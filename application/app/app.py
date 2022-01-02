@@ -13,6 +13,11 @@ def hello_world():
 
 @app.route("/top-10-countries/<value>", methods=['GET'])
 def top_response(value):
+    """
+    Used to return a top based on some criterion choose by user 
+    :param value: is the criterion which is input by user
+    :return : json file with the response from database
+    """
     # check if the user input is correct
     if value not in ['density', 'population', 'surface']:
         return make_response(jsonify({"error": "Your input is not correct, information missing.."}), 400)
@@ -46,6 +51,12 @@ def top_response(value):
 
 @app.route("/countries/<category>/<value>", methods=['GET'])
 def response(category, value):
+    """
+    Used to interact with database 
+    :param category: input by user to choose a category 
+    :param value: input by user to select a criterion 
+    :return: a json file with the response from database 
+    """
     # check if the user input is correct
     if category not in ['timezone', 'languages', 'governance']:
         return make_response(jsonify({"error": "Your input is not correct, information missing.."}), 400)
@@ -80,6 +91,11 @@ def response(category, value):
 
 @app.route("/countries", methods=['GET'])
 def countries_response():
+    """ 
+    Used to interact with database 
+    :return: a json file with the response from database containing all countries 
+    
+    """
     response = []
     connection = None
     try:

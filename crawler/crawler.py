@@ -19,6 +19,10 @@ r = re.compile("(([0-9]+[\.|,| ])+[0-9]+)|[0-9]+")
 
 
 def deleteFiles():
+    """
+    used to create the path where to store the information taken by crawler
+
+    """
     if os.path.exists(director):
         shutil.rmtree(director)
     if os.path.exists(csv_file):
@@ -26,6 +30,9 @@ def deleteFiles():
 
 
 def makeFiles():
+    """
+        Used to create the csv file and write the header
+    """
     os.mkdir(director)
     header = ['name', 'capital', 'surface', 'neighbors', 'timezone', 'density', 'population', 'languages', 'governance']
     with open(csv_file, 'w', encoding='UTF8', newline='') as f:
@@ -35,12 +42,23 @@ def makeFiles():
 
 
 def write_in_csv(row):
+    """
+        Used to write information scrapped in a csv file
+
+        :param row: information to write in csv file
+    """
     with open(csv_file, 'a', encoding='UTF8', newline='') as f:
         writer = csv.writer(f, delimiter='|')
         writer.writerow(row)
 
 
 def sanitaze_data(content):
+    """
+        Used for sanitaze content received
+
+        :param content: string to be cleared
+        :return: clean data
+    """
     clean_content = content.strip()
     clean_content = re.sub(r"\[.+?\]", "", clean_content)
     clean_content = re.sub(r" {2,}", "", clean_content)
@@ -54,6 +72,11 @@ def sanitaze_data(content):
 
 
 def deal_with_big_numbers(content):
+    """
+    deal with different format for numbers
+
+    :return: a correct number
+    """
 
     content = re.sub(r"(\.| )", "", content)
     content = re.sub(r"(,)", ".", content)
@@ -61,8 +84,15 @@ def deal_with_big_numbers(content):
 
 
 def scrap_surface(table, row):
+    """
+        used for scrapping surface informations
+
+        :param table: html table from website
+        :row: list with information already taken
+    """
     surface = 0
-    surface = table.find(lambda tag: tag.name == "th" and "Geografie" in tag.text).parent.find_next_sibling('tr').find_next_sibling('tr')
+    surface = table.find(lambda tag: tag.name == "th" and "Geografie" in tag.text).parent.find_next_sibling(
+        'tr').find_next_sibling('tr')
     result = r.search(surface.td.text)
     print(surface.td.text)
     if result:
@@ -76,6 +106,12 @@ def scrap_surface(table, row):
 
 
 def scrap_neighbours(table, row):
+    """ 
+        used for scrapping neighbours informations
+
+        :param table: html table from website
+        :row: list with information already taken
+    """
     store_neighbours = "Unknown"
     neighbors = table.find(lambda tag: tag.name == "th" and "Vecini" in tag.text)
     if neighbors:
@@ -90,12 +126,24 @@ def scrap_neighbours(table, row):
 
 
 def sanitaze_timezone(content):
+    """ 
+        used for sanitaze timezone informations
+
+        :param content: string to be cleared
+        :return: clean content
+    """
     clean_content = re.sub(r"\[.*$", "", content)
     clean_content = re.sub(r" {2,}", "", clean_content)
     return clean_content
 
 
 def scrap_timezone(table, row):
+    """
+        used for scrapping timezone informations
+
+        :param table: html table from website
+        :row: list with information already taken
+    """
     time_zone = 'Unknown'
     time_zone = table.find(lambda tag: tag.name == "th" and "Fus orar" in tag.text).find_next_sibling('td').text
     # row.append(sanitaze_data(time_zone))
@@ -105,6 +153,12 @@ def scrap_timezone(table, row):
 
 
 def scrap_density(table, row):
+    """
+        used for scrapping density informations
+
+        :param table: html table from website
+        :row: list with information already taken
+    """
     result_density = 0
     density = table.find(lambda tag: tag.name == "th" and "Densitate" in tag.text)
     if density:
@@ -123,6 +177,12 @@ def scrap_density(table, row):
 
 
 def scrap_population(table, row):
+    """
+        used for scrapping population informations
+
+        :param table: html table from website
+        :row: list with information already taken
+    """
     # first, we search for estimation
     population = 0
     estimation = table.find_all(lambda tag: tag.name == "th" and "Estimare" in tag.text)
@@ -133,29 +193,35 @@ def scrap_population(table, row):
         population = result.group(0)
         population = re.sub(r"(,| |\.)", "", population)
     else:
-      population_search = table.find(lambda tag: tag.name == "th" and "Recensământ" in tag.text)
-      if population_search:
-        population_search = population_search.find_next_sibling('td')
-        result = r.search(population_search.text)
-        if result:
-            population = result.group(0)
-            population = re.sub(r"(,| |\.)", "", population)
+        population_search = table.find(lambda tag: tag.name == "th" and "Recensământ" in tag.text)
+        if population_search:
+            population_search = population_search.find_next_sibling('td')
+            result = r.search(population_search.text)
+            if result:
+                population = result.group(0)
+                population = re.sub(r"(,| |\.)", "", population)
     print(population)
     row.append(population)
     return row
 
 
 def scrap_languages(table, row):
+    """
+        used for scrapping languages informations
+
+        :param table: html table from website
+        :row: list with information already taken
+    """
     result_languages = 'Unknown'
     language = table.find(lambda tag: tag.name == "th" and "Limbi oficiale" in tag.text)
     if language:
-      language = language.find_next_sibling('td')
-      languages = language.find_all('a')
-      if languages:
-        result_languages = languages[0].text
-        for lang in languages[1:]:
-            result_languages += ', ' + lang.text
-      else:
+        language = language.find_next_sibling('td')
+        languages = language.find_all('a')
+        if languages:
+            result_languages = languages[0].text
+            for lang in languages[1:]:
+                result_languages += ', ' + lang.text
+        else:
             result_languages = language.text
     # print("afisez limbile")
     # print(result_languages)
@@ -165,6 +231,12 @@ def scrap_languages(table, row):
 
 
 def scrap_governance(table, row):
+    """
+        used for scrapping governance informations
+
+        :param table: html table from website
+        :row: list with information already taken
+    """
     result_governance = 'Unknown'
     governance = table.find(lambda tag: tag.name == "th" and "Sistem politic" in tag.text)
     if governance:
@@ -175,6 +247,12 @@ def scrap_governance(table, row):
 
 
 def go_spider_scrapping(row, href):
+    """
+        Function used for crawl a specific url and get data
+
+        :param row: list with information already taken
+        :param href: link where to crawl to
+    """
 
     link_crawl = base_URL + href
     # link_crawl = 'https://ro.wikipedia.org/wiki/Albania'
@@ -202,6 +280,9 @@ def go_spider_scrapping(row, href):
 
 
 def crawler():
+    """
+        main function for crawler to scrap data from website
+    """
     page = requests.get(URL)
     soup = BeautifulSoup(page.content, 'html.parser')
     results = soup.find(id='mw-content-text')
@@ -229,29 +310,14 @@ def crawler():
 
 
 def main():
+    """
+        Main file to manage the crawler for delete and create new files
+    """
     deleteFiles()
     makeFiles()
     crawler()
     # go_spider_scrapping()
-    
+
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
